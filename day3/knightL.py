@@ -17,7 +17,6 @@ def minimum_moves(a, b, n):
     visited = [[0, 0]]
     bfs = Queue()
     bfs.put([0, 0, 0])
-    counter = 0
 
     while bfs.qsize() > 0:
         curr = bfs.get()
