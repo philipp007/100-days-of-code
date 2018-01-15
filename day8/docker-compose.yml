@@ -1,0 +1,9 @@
+version: '2'
+services:
+  web:
+    build: ./server
+    working_dir: /var/www/app
+    ports:
+     - "5000:5000"
+    volumes:
+     - ./server:/var/www/app:rw
