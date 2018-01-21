@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from redisworks import Root
+from redis_client import Root
 
-root = Root(host='localhost', port=6379, db=0)
 
+root = Root
 root.todo_list = {"item1": "This is a nice day"}
 todo_api = Blueprint('todo', 'todo', url_prefix='/todos')
 

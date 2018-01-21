@@ -7,6 +7,8 @@ services:
      - "5000:5000"
     volumes:
      - ./server:/var/www/app:rw
+    depends_on:
+     - redis
 
   redis:
     image: redis
