@@ -9,7 +9,8 @@ todo_api = Blueprint('todo', 'todo', url_prefix='/todos')
 
 @todo_api.route('/', methods=['GET'])
 def api_list():
-    return jsonify(list(root.todo_list))
+    items = root.todo_list
+    return jsonify(list(items.items()))
 
 
 @todo_api.route('/<item_id>', methods=['GET', 'DELETE', 'PUT'])
