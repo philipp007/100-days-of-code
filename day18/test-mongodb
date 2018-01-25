@@ -1,0 +1,29 @@
+from pymongo import MongoClient
+
+client = MongoClient('localhost')
+
+db = client.business
+
+names = ['Son Goku', 'Vegeta', 'Piccolo', 'Mr Satan']
+company_type = ['LLC', 'Inc', 'Company', 'Corporation']
+hobby = ['Fighting', 'Prince of Sayans', 'Namekian', 'Earthling']
+
+character1 = {'name': 'Goku', 'company': 'Earthlings', 'hobby': 'fighting'}
+character2 = {'name': 'Vegeta', 'company': 'Sayans', 'hobby': 'fighting'}
+character3 = {'name': 'Buu', 'company': 'Aliens', 'hobby': 'sleeping'}
+
+# inserting
+insert_result = db.characters.insert_one(character1)
+insert_result = db.characters.insert_one(character2)
+insert_result = db.characters.insert_one(character3)
+
+# finding
+goku = db.characters.find_one({'name': 'Son Goku'})
+fighters = db.characters.find({'hobby': 'fighting'})
+
+# updating
+db.characters.update_one({'_id': goku[0].get('_id')}, {'$set': { 'hobby': 'Eating'}})
+goku = db.characters.find_one({'name': 'Son Goku'})
+
+# deleting
+db.characters.delete_many({})
