@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from redis_client import Root
+from redisworks import Root
 
 
 root = Root
