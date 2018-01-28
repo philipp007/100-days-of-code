@@ -21,10 +21,10 @@ class CNN(nn.Module):
     
     def __init__(self, number_actions):
         super(CNN, self).__init__()
-        self.convolution1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=5)
-        self.convolution2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3)
-        self.convolution3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=2)
-        self.fc1 = nn.Linear(in_features=self.count_neurons((1, 48, 64)), out_features=40)
+        self.convolution1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5)
+        self.convolution2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3)
+        self.convolution3 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=2)
+        self.fc1 = nn.Linear(in_features=self.count_neurons((1, 80, 80)), out_features=40)
         self.fc2 = nn.Linear(in_features=40, out_features=number_actions)
 
     def count_neurons(self, image_dim):
@@ -80,16 +80,16 @@ game.init()
 # Building an AI
 cnn = CNN(number_actions)
 softmax_body = SoftmaxBody(T=1)
-ai = AI(brain = cnn, body = softmax_body)
+ai = AI(brain=cnn, body=softmax_body)
 
 # Setting up Experience Replay
-n_steps = experience_replay.NStepProgress(env=game, ai=ai, n_step=200)
-memory = experience_replay.ReplayMemory(n_steps=n_steps, capacity=1000)
+n_steps = experience_replay.NStepProgress(env=game, ai=ai, n_step=10)
+memory = experience_replay.ReplayMemory(n_steps=n_steps, capacity=10000)
 
 
 # Implementing Eligibility Trace
 def eligibility_trace(batch):
-    gamma = 0.8
+    gamma = 0.99
     inputs = []
     targets = []
     for series in batch:
@@ -127,13 +127,13 @@ ma = MA(100)
 
 # Training the AI
 loss = nn.MSELoss()
-optimizer = optim.Adam(cnn.parameters(), lr=0.1)
+optimizer = optim.Adam(cnn.parameters(), lr=0.001)
 nb_epochs = 1000
 for epoch in range(1, nb_epochs + 1):
     memory.run_steps(200)
-    for batch in memory.sample_batch(50):
+    for batch in memory.sample_batch(128):
         inputs, targets = eligibility_trace(batch)
-        inputs, targets = Variable(inputs.unsqueeze(1)), Variable(targets)
+        inputs, targets = Variable(inputs.unsqueeze(1)), Variable(targets.unsqueeze(1))
         predictions = cnn(inputs.cuda())
         loss_error = loss(predictions, targets)
         optimizer.zero_grad()
@@ -144,7 +144,7 @@ for epoch in range(1, nb_epochs + 1):
     avg_reward = ma.average()
     max_reward = max(ma.list_of_rewards) if len(ma.list_of_rewards) > 0 else 0
     print("Epoch: %s, Average Reward: %s" % (str(epoch), str(avg_reward)))
-    if avg_reward >= 100 or max_reward >= 100:
+    if avg_reward >= 1500 or max_reward >= 1500:
         print("Congratulations, your AI wins")
         break
 

@@ -21,7 +21,7 @@ actions = [left, right, shoot, forward, backward, turn_left, turn_right]
 
 def get_gray_scale(state):
     state = (state[0] + state[1] + state[2]) / 3
-    state = imresize(state, (48,64))
+    state = imresize(state, (80,80))
     return state
 
 
@@ -42,7 +42,7 @@ class NStepProgress:
             r = self.env.make_action(actions[action])
             reward += r
             is_done = self.env.is_episode_finished()
-            history.append(Step(state=state, action=actions[action], reward=r, done=is_done))
+            history.append(Step(state=state, action=action, reward=r, done=is_done))
             while len(history) > self.n_step + 1:
                 history.popleft()
             if len(history) == self.n_step + 1:
