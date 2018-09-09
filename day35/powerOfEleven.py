@@ -1,4 +1,7 @@
 #!/bin/python3
+import sys
+
+
 def string_add(a, b):
     padding = max(len(a), len(b))
     a = a.zfill(padding)
@@ -28,6 +31,7 @@ def count_ones(str):
 
 
 if __name__ == '__main__':
+    sys.setrecursionlimit(10000)
     N = int(input())
     power = power_of_eleven(N)
     print(count_ones(power))
